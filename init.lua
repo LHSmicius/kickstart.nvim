@@ -284,6 +284,44 @@ require('lazy').setup({
     },
   },
 
+  { -- Add CodeCompanion plugin
+    'olimorris/codecompanion.nvim',
+    opts = {},
+    dependencies = {
+      { 'nvim-lua/plenary.nvim', branch = 'master' },
+      'nvim-treesitter/nvim-treesitter',
+    },
+    config = function()
+      require('codecompanion').setup {
+        strategies = {
+          chat = {
+            adapter = 'anthropic',
+          },
+          inline = {
+            adapter = 'anthropic',
+          },
+        },
+        adapters = {
+          http = {
+            anthropic = function()
+              return require('codecompanion.adapters').extend('anthropic', {
+                env = {
+                  api_key = 'ANTHROPIC_API_KEY',
+                },
+                schema = {
+                  model = {
+                    default = 'claude-sonnet-4-20250514',
+                  },
+                },
+              })
+            end,
+          },
+        },
+        log_level = 'DEBUG',
+      }
+    end,
+  },
+
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
